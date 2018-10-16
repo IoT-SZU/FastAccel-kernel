@@ -238,28 +238,32 @@ static int mpu_poweron(struct mpu_devdata *mpu)
     );
     mpu_write_reg(mpu, MPU_PWR_MGMT_2, 0
         // disable gyro
-        | MPU_PWR_MGMT_2_DISABLE_XG
-        | MPU_PWR_MGMT_2_DISABLE_YG
-        | MPU_PWR_MGMT_2_DISABLE_ZG
+        // | MPU_PWR_MGMT_2_DISABLE_XG
+        // | MPU_PWR_MGMT_2_DISABLE_YG
+        // | MPU_PWR_MGMT_2_DISABLE_ZG
     );
     mpu_write_reg(mpu, MPU_CONFIG, 0
         | (mpu->fifo_mode ? MPU_CONFIG_FIFO_MODE : 0)
         | MPU_CONFIG_EXT_SYNC_SET_NONE
-        | MPU_CONFIG_DLPF_CFG_0
+        | MPU_CONFIG_DLPF_CFG_1
+    );
+    mpu_write_reg(mpu, MPU_GYRO_CONFIG ,0
+        | MPU_GYRO_CONFIG_GYRO_FS_SEL_2000_DPS
+        | MPU_GYRO_CONFIG_GYRO_FCHOICE_11
     );
     mpu_write_reg(mpu, MPU_ACCEL_CONFIG, 0
         | mpu_accel_ranges[mpu->accel_range].flag
     );
     mpu_write_reg(mpu, MPU_ACCEL_CONFIG_2, 0
         | MPU_ACCEL_CONFIG_2_FIFO_SIZE_4096_B
-        | MPU_ACCEL_CONFIG_2_ACCEL_FCHOICE_0
+        | MPU_ACCEL_CONFIG_2_ACCEL_FCHOICE_1
         | MPU_ACCEL_CONFIG_2_A_DLPF_CFG_0
     );
-    mpu_write_reg(mpu, MPU_SMPLRT_DIV, 0); // divide sample frequency by (SMPLRT_DIV+1)
+    mpu_write_reg(mpu, MPU_SMPLRT_DIV, 1); // divide sample frequency by (SMPLRT_DIV+1)
     mpu_write_reg(mpu, MPU_FIFO_EN, 0
-        // | MPU_FIFO_EN_GYROX
-        // | MPU_FIFO_EN_GYROY
-        // | MPU_FIFO_EN_GYROZ
+        | MPU_FIFO_EN_GYROX
+        | MPU_FIFO_EN_GYROY
+        | MPU_FIFO_EN_GYROZ
         | MPU_FIFO_EN_ACCEL
     );
     mpu_write_reg(mpu, MPU_I2C_MST_CTRL, 0
